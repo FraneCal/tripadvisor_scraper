@@ -1,32 +1,45 @@
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver import ActionChains
-from selenium.webdriver.chrome.options import Options
-from fake_useragent import UserAgent
-import time
+import requests
 
 URL = "https://www.tripadvisor.com/Restaurants-g186338-London_England.html"
 
-options = Options()
-ua = UserAgent()
-user_agent = ua.random
+header = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8"
+}
 
-options.add_argument(f'--user-agent={user_agent}')
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-gpu")
+response = requests.get(URL, headers=header)
+response.raise_for_status()
 
-driver = webdriver.Chrome(options=options)
-actions = ActionChains(driver)
-driver.get(URL)
+web_page = response.text
+soup = BeautifulSoup(web_page, 'html.parser')
 
-time.sleep(5)
+# GETTING THE LINKS FROM THE FIRST PAGE
+boxes = soup.find_all('div', class_='biGQs _P fiohW alXOW NwcxK GzNcM ytVPx UTQMg RnEEZ ngXxk')
+links = ['https://www.tripadvisor.com/'+ box.find('a').get('href') for box in boxes]
 
-#driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+# GETTING THE LINKS FROM REST OF THE PAGES
+for i in range(30, 120, 30):
+    URL = f"Https://www.tripadvisor.com/Restaurants-g186338-oa{i}-London_England.html"
+    print(f"Curenctly at {i}.")
 
-page_source = driver.page_source
+    header = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8"
+    }
 
-driver.quit()
+    response = requests.get(URL, headers=header)
+    response.raise_for_status()
 
-soup = BeautifulSoup(page_source, "html.parser")
+    web_page = response.text
+    soup = BeautifulSoup(web_page, 'html.parser')
 
-print(soup)
+    boxes = soup.find_all('div', class_='biGQs _P fiohW alXOW NwcxK GzNcM ytVPx UTQMg RnEEZ ngXxk')
+    for box in boxes:
+        links.append('https://www.tripadvisor.com/' + box.find('a').get('href'))
+
+    with open("tripadvisor_links.txt", "w") as file:
+        for link in links:
+            file.write(link + "\n")
+
+print(len(links))
