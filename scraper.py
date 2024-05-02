@@ -18,6 +18,11 @@ soup = BeautifulSoup(web_page, 'html.parser')
 boxes = soup.find_all('div', class_='biGQs _P fiohW alXOW NwcxK GzNcM ytVPx UTQMg RnEEZ ngXxk')
 links = ['https://www.tripadvisor.com/'+ box.find('a').get('href') for box in boxes]
 
+with open("tripadvisor_links.txt", "a") as file:
+    for link in links:
+        file.write(link + "\n")
+
+
 # GETTING THE LINKS FROM REST OF THE PAGES
 for i in range(30, 120, 30):
     URL = f"Https://www.tripadvisor.com/Restaurants-g186338-oa{i}-London_England.html"
@@ -35,11 +40,11 @@ for i in range(30, 120, 30):
     soup = BeautifulSoup(web_page, 'html.parser')
 
     boxes = soup.find_all('div', class_='biGQs _P fiohW alXOW NwcxK GzNcM ytVPx UTQMg RnEEZ ngXxk')
+    links = []
     for box in boxes:
         links.append('https://www.tripadvisor.com/' + box.find('a').get('href'))
 
-    with open("tripadvisor_links.txt", "w") as file:
+    with open("tripadvisor_links.txt", "a") as file:
         for link in links:
             file.write(link + "\n")
-
-print(len(links))
+    print("Links have been writen.")
