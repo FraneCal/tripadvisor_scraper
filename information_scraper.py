@@ -26,7 +26,7 @@ with open(csv_file, mode='a', newline='', encoding='utf-8') as csvfile:
     else:
         # File is empty, write the header row
         write_header = True
-        writer.writerow(['URL', 'Title', 'Address', 'Number of Reviews', 'Hashtag', 'Phone', 'Pricing', 'Cuisine Type', 'Open Hours'])
+        writer.writerow(['Name', 'Address', 'Number of Reviews', 'Hashtag', 'Phone', 'Pricing', 'Cuisine Type', 'Open Hours'])
 
     counter = 0
     for url in urls:
@@ -42,9 +42,9 @@ with open(csv_file, mode='a', newline='', encoding='utf-8') as csvfile:
         soup = BeautifulSoup(response.text, 'html.parser')
 
         try:
-            title = soup.find('h1', class_='biGQs _P egaXP rRtyp').getText()
+            name = soup.find('h1', class_='biGQs _P egaXP rRtyp').getText()
         except AttributeError:
-            title = "Title Not Found"
+            name = "Name Not Found"
 
         try:
             address = soup.find('div', class_='biGQs _P pZUbB hmDzD').getText()
@@ -82,6 +82,6 @@ with open(csv_file, mode='a', newline='', encoding='utf-8') as csvfile:
             open_hours = "Open Hours Not Found"
 
         # Write data to CSV
-        writer.writerow([url, title, address, number_of_reviews, hashtag, phone, pricing, cuisine_type, open_hours])
+        writer.writerow([name, address, number_of_reviews, hashtag, phone, pricing, cuisine_type, open_hours])
 
         time.sleep(0.2)
