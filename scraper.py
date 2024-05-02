@@ -1,5 +1,8 @@
+# Program stopped at 10920
+
 from bs4 import BeautifulSoup
 import requests
+import time
 
 URL = "https://www.tripadvisor.com/Restaurants-g186338-London_England.html"
 
@@ -24,7 +27,7 @@ with open("tripadvisor_links.txt", "a") as file:
 
 
 # GETTING THE LINKS FROM REST OF THE PAGES
-for i in range(30, 120, 30):
+for i in range(30, 20000, 30):
     URL = f"Https://www.tripadvisor.com/Restaurants-g186338-oa{i}-London_England.html"
     print(f"Curenctly at {i}.")
 
@@ -48,3 +51,5 @@ for i in range(30, 120, 30):
         for link in links:
             file.write(link + "\n")
     print("Links have been writen.")
+
+    time.sleep(0.5)
