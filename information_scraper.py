@@ -5,7 +5,7 @@ import csv
 import time
 
 # Read URLs from the file
-with open("tripadvisor_links.txt", "r") as file:
+with open("restaurant_links.txt", "r") as file:
     urls = file.readlines()
 
 header = {
