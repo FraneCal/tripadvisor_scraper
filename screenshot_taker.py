@@ -4,6 +4,15 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import time
+import re
+
+# Function to extract restaurant name from URL
+def extract_restaurant_name(url):
+    match = re.search(r'Reviews-(.*?)-London', url)
+    if match:
+        return match.group(1)
+    else:
+        return "Unknown"
 
 # Read URLs from the CSV file
 urls = []
@@ -24,8 +33,8 @@ for url in urls:
     time.sleep(5)
 
     try:
-        slider_container = driver.find_element(By.XPATH, '//*[@id="captcha__frame__bottom"]/div[2]')
-        slider = driver.find_element(By.XPATH, '//*[@id="captcha__frame__bottom"]/div[2]/div[2]')
+        slider_container = driver.find_element(By.CSS_SELECTOR, 'div.sliderContainer')
+        slider = driver.find_element(By.CLASS_NAME, 'div.sliderContainer > div.slider')
 
         for x in range(10000):
             actions.move_to_element(slider).click_and_hold().move_by_offset(x, 0).release().perform()
@@ -35,8 +44,11 @@ for url in urls:
 
     time.sleep(3)
 
+    # Extract restaurant name
+    restaurant_name = extract_restaurant_name(url)
+
     # Take screenshot
-    driver.save_screenshot(f'{url.replace("/", "_").replace(":", "_")}.png')
+    driver.save_screenshot(f'{restaurant_name}.png')
 
 # Quit webdriver
 driver.quit()
