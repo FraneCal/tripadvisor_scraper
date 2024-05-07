@@ -26,7 +26,7 @@ with open(csv_file, mode='a', newline='', encoding='utf-8') as csvfile:
     else:
         # File is empty, write the header row
         write_header = True
-        writer.writerow(['URL', 'Name', 'Address', 'Number of Reviews', 'Hashtag', 'Phone', 'Pricing', 'Cuisine Type', 'Open Hours'])
+        writer.writerow(['URL', 'Name', 'Address', 'Number of Reviews', 'Tripadvisor_hashtag', 'Phone', 'Pricing', 'Cuisine Type', 'Open Hours'])
 
     counter = 0
     for url in urls:
